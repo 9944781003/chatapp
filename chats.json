@@ -1,0 +1,34 @@
+{
+  "chats": [
+    {
+      "text": "Hi how are you?",
+      "sender": "61c54df426dbd9d4453aff0f",
+      "recipient": "61c5626b90dea82a405690bf"
+    },
+    {
+      "text": "Hi  I am gud. how are you?",
+      "sender": "61c5626b90dea82a405690bf",
+      "recipient": "61c54df426dbd9d4453aff0f"
+    },
+    {
+      "text": "Where do you stay in chennai?",
+      "sender": "61c54df426dbd9d4453aff0f",
+      "recipient": "61c5626b90dea82a405690bf"
+    },
+    {
+      "text": "Hey, I stay is a hostal near valapalani, Have you ever come toi this area?",
+      "sender": "61c5626b90dea82a405690bf",
+      "recipient": "61c54df426dbd9d4453aff0f"
+    },
+    {
+      "text": "No, I would like to come sometimes soon",
+      "sender": "61c54df426dbd9d4453aff0f",
+      "recipient": "61c5626b90dea82a405690bf"
+    },
+    {
+      "text": "Oh, You are welcome. Dial my number when you come to this place next time",
+      "sender": "61c5626b90dea82a405690bf",
+      "recipient": "61c54df426dbd9d4453aff0f"
+    }
+  ]
+}
