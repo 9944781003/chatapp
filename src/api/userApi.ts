@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const userApi = axios.create({
   baseURL:
-    'https://04af-2401-4900-4c1c-c757-9841-b20-10a1-7cfa.in.ngrok.io/users',
+    'http://1de5-2401-4900-4c1c-c644-6c99-27fe-c348-32a.in.ngrok.io/users',
 });
 userApi.interceptors.request.use(async config => {
   const token = await AsyncStorage.getItem('token');

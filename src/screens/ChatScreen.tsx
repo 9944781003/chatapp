@@ -13,16 +13,12 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 import chatApi from '../api/chatApi';
 import {sendIcon} from '../assets';
 import Chat from '../types/Modals/Chat';
-import AppStackParamList from '../types/appstack-param-list';
 import {RootState} from '../store';
 import {useSelector} from 'react-redux';
-import {Query} from 'mongoose';
-import {FirebaseDatabaseTypes} from '@react-native-firebase/database';
-type AppStackProps = NativeStackScreenProps<AppStackParamList, 'ChatScreen'>;
-type navigtion = AppStackProps['navigation'];
-type route = AppStackProps['route'];
+import {AppStackParamList} from '../navigators/AppStackNavigator';
+type Props = NativeStackScreenProps<AppStackParamList, 'ChatScreen'>;
 
-const ChatScreen = (props: {navigation: navigtion; route: route}) => {
+const ChatScreen = (props: Props) => {
   const auth = useSelector((state: RootState) => state.auth);
 
   const [chat, setChat] = React.useState({
@@ -33,13 +29,13 @@ const ChatScreen = (props: {navigation: navigtion; route: route}) => {
   var user_id = '61c54df426dbd9d4453aff0f';
 
   React.useLayoutEffect(() => {
-    setChat({...chat, recipient: props.route.params._id});
+    setChat({...chat, recipient: props.route.params._id || ''});
   }, []);
   React.useEffect(() => {
     setChat({
       ...chat,
-      sender: auth.value._id,
-      recipient: props.route.params._id,
+      sender: '61c6d8d544b4f12caca42dc7',
+      recipient: props.route.params._id || '',
     });
     const onValueCahnge = chatApi.on('value', snapShot => {
       let data = Object.entries(snapShot.exportVal()['.value'] || {}).map(
@@ -70,8 +66,8 @@ const ChatScreen = (props: {navigation: navigtion; route: route}) => {
     setChat({
       createdAt: 0,
       text: '',
-      sender: auth.value._id,
-      recipient: props.route.params._id,
+      sender: auth.value._id || '',
+      recipient: props.route.params._id || '',
     });
   };
   const HandleChangeText = (text: string) => {

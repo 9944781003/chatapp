@@ -1,15 +1,26 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import {ActivityIndicatorComponent} from 'react-native';
 import userApi from '../../api/userApi';
-import User from '../../types/Modals/User';
-
 type Status = 'fullfilled' | 'rejected' | 'pending';
 
+export type User = {
+  _id?: string;
+  firstname?: string;
+  lastname?: string;
+  email?: string;
+  phone?: string;
+  username?: string;
+  password?: string;
+  __v?: number;
+};
 const value = [] as User[];
 
 const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {
-  const response = await userApi.get('/');
-  return response.data as User[];
+  try {
+    const response = await userApi.get('/');
+    return response.data as User[];
+  } catch (error) {
+    console.log(error);
+  }
 });
 const fetchUserById = createAsyncThunk('users/fetchUserById', async _id => {
   const response = await userApi.get(`/:${_id}`);

@@ -1,93 +1,62 @@
-import AsyncStorageLib from '@react-native-async-storage/async-storage';
+import {StackActions} from '@react-navigation/routers';
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import {ActivityIndicatorComponent} from 'react-native';
-import {useDispatch} from 'react-redux';
-import userApi from '../../api/userApi';
-import AsyncStatus from '../../types/async-status';
-import User from '../../types/Modals/User';
 import {navigationRef} from '../../utils/navigationRef';
+import {User} from './UserSlice';
+type Status = 'fullfilled' | 'rejected' | 'pending';
 
-const asyncSignUp = createAsyncThunk('auth/signup', async (user: User) => {
-  try {
-    let _user: User = await userApi.post(`/`, user);
-    if (_user._id) {
-      return _user;
-    }
-  } catch (error) {}
-});
-const asyncSignin = createAsyncThunk(
-  'auth/signin',
-  async (formdata: {username: string; password: string}) => {
-    try {
-      let users = await userApi.get(`/`, {
-        params: formdata,
-      });
-      return users.data[0];
-    } catch (error) {
-      return [];
-    }
+type InitialStateProps = {
+  status: 'fullfilled' | 'rejected' | 'pending';
+  value: User;
+};
+const initialState: InitialStateProps = {
+  status: 'pending',
+  value: {
+    _id: '61c6d8d544b4f12caca42dc7',
+    firstname: 'sasi',
+    lastname: 's',
+    email: 'sasi@gmail.com',
+    phone: '9750022911',
+    username: 'sasi123',
+    password: 'asdfg12',
+    __v: 0,
+  },
+};
+const AsyncSignup = createAsyncThunk(
+  'auth/signup',
+  async (prop: User, thunkAPI) => {
+    return thunkAPI.fulfillWithValue('hello');
   },
 );
-const asyncSignout = createAsyncThunk('auth/signout', async (id: string) => {
-  return id;
-});
-const asyncTryLocalSignin = createAsyncThunk('suth/localsignin', async () => {
-  let result = await AsyncStorageLib.getItem('user');
-  return result ? JSON.parse(result) : {};
-});
+const AsyncSignin = createAsyncThunk('auth/signin', async () => {});
+const AsyncSignout = createAsyncThunk('auth/signout', async () => {});
 
-const AuthSlice = createSlice({
+const authSlice = createSlice({
   name: 'auth',
-  initialState: {
-    status: 'fullfilled' as AsyncStatus,
-    value: {} as User,
-  },
+  initialState,
   reducers: {},
   extraReducers: builder => {
-    builder.addCase(asyncSignin.fulfilled, (state, {payload}) => {
-      (async () => {
-        await AsyncStorageLib.setItem('user', JSON.stringify(payload));
-        state.status = 'fullfilled';
-        state.value = payload;
-      })();
+    builder.addCase(AsyncSignup.fulfilled, (state, payload) => {
+      return (state = {
+        status: 'fullfilled',
+        value: {
+          _id: '61c6d8d544b4f12caca42dc7',
+          firstname: 'sasi',
+          lastname: 's',
+          email: 'sasi@gmail.com',
+          phone: '9750022911',
+          username: 'sasi123',
+          password: 'asdfg12',
+          __v: 0,
+        },
+      });
     });
-    builder.addCase(asyncSignin.rejected, (state, {payload}) => {
-      state.status = 'rejected';
-      state.value = {};
-    });
-    builder.addCase(asyncSignin.pending, (state, {payload}) => {
-      state.status = 'pending';
-      state.value = {};
-    });
-    builder.addCase(asyncSignUp.fulfilled, (state, {payload}) => {
+    builder.addCase(AsyncSignin.pending, (state, payload) => {
       state.status = 'fullfilled';
-      state.value = payload as User;
     });
-    builder.addCase(asyncSignout.fulfilled, (state, {payload}) => {
-      state.status = 'fullfilled';
-      state.value = {_id: ''};
-    });
-    builder.addCase(asyncTryLocalSignin.fulfilled, (state, action) => {
-      console.log('hah');
-      state.status = 'fullfilled';
-      state.value = action.payload;
-    });
-    builder.addCase(asyncTryLocalSignin.pending, (state, action) => {
-      // console.log('hah');
-      // state.status = 'fullfilled';
-      // state.value = action.payload;
-      state.status = 'pending';
-      state.value = {};
-    });
-    builder.addCase(asyncTryLocalSignin.rejected, (state, action) => {
-      // console.log('hah');
-      state.status = 'rejected';
-      state.value = {};
-    });
+    builder.addCase(AsyncSignout.rejected, (state, payload) => {});
   },
 });
 
-// Action creators are generated for each case reducer function
+export {AsyncSignup};
 
-export {asyncSignUp, asyncSignin, asyncTryLocalSignin};
-export default AuthSlice;
+export default authSlice;
