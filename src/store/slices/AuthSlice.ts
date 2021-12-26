@@ -9,16 +9,7 @@ type InitialStateProps = {
 };
 const initialState: InitialStateProps = {
   status: 'pending',
-  value: {
-    _id: '61c888fbc137e71db58f66cc',
-    firstname: 'Karthik',
-    lastname: 's',
-    email: 'karthik@gmail.com',
-    phone: '9999988888',
-    username: 'karthik_slm',
-    password: 'karthik123',
-    __v: 0,
-  },
+  value: {} as User,
 };
 const AsyncSignup = createAsyncThunk(
   'auth/signup',

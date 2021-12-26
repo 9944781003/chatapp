@@ -16,7 +16,15 @@ export default () => {
   return (
     <AppStack.Navigator initialRouteName="UserListScreen">
       <AppStack.Screen name="UserListScreen" component={UserListScreen} />
-      <AppStack.Screen name="ChatScreen" component={ChatScreen} />
+      <AppStack.Screen
+        name="ChatScreen"
+        options={({route}) => ({
+          title: route.params.firstname
+            ?.concat(' ')
+            .concat(route.params.lastname || ''),
+        })}
+        component={ChatScreen}
+      />
     </AppStack.Navigator>
   );
 };
