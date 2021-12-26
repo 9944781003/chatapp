@@ -4,12 +4,12 @@ type Status = 'fullfilled' | 'rejected' | 'pending';
 
 export type User = {
   _id: string;
-  firstname?: string;
-  lastname?: string;
-  email?: string;
-  phone?: string;
-  username?: string;
-  password?: string;
+  firstname: string;
+  lastname: string;
+  email: string;
+  phone: string;
+  username: string;
+  password: string;
   __v?: number;
 };
 const value = [] as User[];

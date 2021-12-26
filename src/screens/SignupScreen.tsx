@@ -15,21 +15,14 @@ import {useDispatch, useSelector} from 'react-redux';
 import {AuthStackParamList} from '../navigators/AuthStackNavigator';
 import {RootState} from '../store';
 import {AsyncSignup} from '../store/slices/AuthSlice';
+import {User} from '../store/slices/UserSlice';
 import {navigationRef} from '../utils/navigationRef';
 
 const emailPattern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
 
-type StateProps = {
-  firstname: string;
-  lastname: string;
-  username: string;
-  password: string;
-  email: string;
-  phone: string;
-};
 type Props = NativeStackScreenProps<AuthStackParamList, 'SignupScreen'>;
 export default function SignupSceen(props: Props) {
-  const [state, setState] = React.useState<StateProps>({
+  const [state, setState] = React.useState<Omit<User, '_id'>>({
     firstname: '',
     lastname: '',
     username: '',
@@ -53,16 +46,16 @@ export default function SignupSceen(props: Props) {
     setState({...state, lastname});
   };
   const HandleUsernameTextChange = (username: string) => {
-    setState({...state, username} as StateProps);
+    setState({...state, username} as Omit<User, '_id'>);
   };
   const HandlePasswordTextChange = (password: string) => {
-    setState({...state, password} as StateProps);
+    setState({...state, password} as Omit<User, '_id'>);
   };
   const HandleEmailTextChange = (email: string) => {
-    setState({...state, email} as StateProps);
+    setState({...state, email} as Omit<User, '_id'>);
   };
   const HandlePhoneTextChange = (phone: string) => {
-    setState({...state, phone} as StateProps);
+    setState({...state, phone} as Omit<User, '_id'>);
   };
 
   const HandleSubmitPress = () => {
@@ -75,6 +68,7 @@ export default function SignupSceen(props: Props) {
       state.password.length > 4
     ) {
       dispatch(AsyncSignup(state));
+      setState({} as User);
     } else {
       console.log('form invalid', state);
       ToastAndroid.show(
