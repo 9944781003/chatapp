@@ -3,7 +3,7 @@ import userApi from '../../api/userApi';
 type Status = 'fullfilled' | 'rejected' | 'pending';
 
 export type User = {
-  _id?: string;
+  _id: string;
   firstname?: string;
   lastname?: string;
   email?: string;

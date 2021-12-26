@@ -21,22 +21,15 @@ type Props = NativeStackScreenProps<AppStackParamList, 'ChatScreen'>;
 const ChatScreen = (props: Props) => {
   const auth = useSelector((state: RootState) => state.auth);
 
-  const [chat, setChat] = React.useState({
-    text: '',
-    createdAt: Date.now(),
-  } as Chat);
+  const [chat, setChat] = React.useState({} as Chat);
   const [myChats, setMyChats] = React.useState<Chat[]>();
-  var user_id = '61c54df426dbd9d4453aff0f';
 
   React.useLayoutEffect(() => {
-    setChat({...chat, recipient: props.route.params._id || ''});
+    setChat({...chat, recipient: props.route.params._id});
   }, []);
   React.useEffect(() => {
-    setChat({
-      ...chat,
-      sender: '61c6d8d544b4f12caca42dc7',
-      recipient: props.route.params._id || '',
-    });
+    console.log(props.route.params._id, auth.value._id);
+
     const onValueCahnge = chatApi.on('value', snapShot => {
       let data = Object.entries(snapShot.exportVal()['.value'] || {}).map(
         item => item[1],
@@ -45,10 +38,10 @@ const ChatScreen = (props: Props) => {
         data
           .filter(item => {
             if (
-              item.sender === props.route.params._id ||
               (item.sender === auth.value._id &&
                 item.recipient === props.route.params._id) ||
-              item.recipient === auth.value._id
+              (item.recipient === auth.value._id &&
+                item.sender === props.route.params._id)
             ) {
               return item;
             }
@@ -59,19 +52,20 @@ const ChatScreen = (props: Props) => {
     return () => {
       chatApi.off('value', onValueCahnge);
     };
-  }, []);
+  }, [auth]);
 
   const HandleSendBtnPress = () => {
-    if (chat.text.length > 0) chatApi.push(chat);
-    setChat({
-      createdAt: 0,
-      text: '',
-      sender: auth.value._id || '',
-      recipient: props.route.params._id || '',
-    });
+    if (chat.text.length > 0)
+      chatApi.push({
+        ...chat,
+        createdAt: Date.now(),
+        sender: auth.value._id,
+        recipient: props.route.params._id,
+      } as Chat);
+    setChat({} as Chat);
   };
   const HandleChangeText = (text: string) => {
-    setChat({...chat, text, createdAt: Date.now()});
+    setChat({...chat, text});
   };
 
   return (
@@ -84,13 +78,13 @@ const ChatScreen = (props: Props) => {
             <React.Fragment>
               <View
                 style={
-                  item.sender === user_id
+                  item.sender === auth.value._id
                     ? styles.SenderWrapper
                     : styles.RecipientWrapper
                 }>
                 <Text
                   style={
-                    item.sender === user_id
+                    item.sender === auth.value._id
                       ? styles.SenderText
                       : styles.RecipientText
                   }>

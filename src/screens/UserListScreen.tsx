@@ -27,7 +27,6 @@ export default function UserListScreen(props: {
   route: route;
 }) {
   const users = useSelector((state: RootState) => state.users);
-  const [ready, setReady] = React.useState(false);
   const auth = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch();
   const HandleArrowPress = (user: User) => {
@@ -35,13 +34,11 @@ export default function UserListScreen(props: {
   };
   React.useEffect(() => {
     dispatch(fetchUsers());
-    setReady(true);
     return () => {};
-  }, []);
-  if (!ready) return <React.Fragment></React.Fragment>;
+  }, [auth]);
   return (
     <FlatList
-      data={users.value.filter(item => item._id !== '61c6d8d544b4f12caca42dc7')}
+      data={users.value.filter(item => item._id !== auth.value._id)}
       renderItem={({item, index}) => {
         return (
           <View key={index} style={styles.listItem}>

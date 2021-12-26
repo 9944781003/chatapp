@@ -1,6 +1,5 @@
-import {StackActions} from '@react-navigation/routers';
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import {navigationRef} from '../../utils/navigationRef';
+import userApi from '../../api/userApi';
 import {User} from './UserSlice';
 type Status = 'fullfilled' | 'rejected' | 'pending';
 
@@ -11,23 +10,30 @@ type InitialStateProps = {
 const initialState: InitialStateProps = {
   status: 'pending',
   value: {
-    _id: '61c6d8d544b4f12caca42dc7',
-    firstname: 'sasi',
+    _id: '61c888fbc137e71db58f66cc',
+    firstname: 'Karthik',
     lastname: 's',
-    email: 'sasi@gmail.com',
-    phone: '9750022911',
-    username: 'sasi123',
-    password: 'asdfg12',
+    email: 'karthik@gmail.com',
+    phone: '9999988888',
+    username: 'karthik_slm',
+    password: 'karthik123',
     __v: 0,
   },
 };
 const AsyncSignup = createAsyncThunk(
   'auth/signup',
-  async (prop: User, thunkAPI) => {
-    return thunkAPI.fulfillWithValue('hello');
+  async (prop: Omit<User, '_id' | '__v'>, thunkAPI) => {
+    return userApi.post('/', prop);
   },
 );
-const AsyncSignin = createAsyncThunk('auth/signin', async () => {});
+const AsyncSignin = createAsyncThunk(
+  'auth/signin',
+  async (prop: Pick<User, 'lastname' | 'password'>) => {
+    const response = await userApi.get('/', {params: prop});
+    return response.data;
+  },
+);
+
 const AsyncSignout = createAsyncThunk('auth/signout', async () => {});
 
 const authSlice = createSlice({
@@ -35,28 +41,18 @@ const authSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: builder => {
-    builder.addCase(AsyncSignup.fulfilled, (state, payload) => {
-      return (state = {
-        status: 'fullfilled',
-        value: {
-          _id: '61c6d8d544b4f12caca42dc7',
-          firstname: 'sasi',
-          lastname: 's',
-          email: 'sasi@gmail.com',
-          phone: '9750022911',
-          username: 'sasi123',
-          password: 'asdfg12',
-          __v: 0,
-        },
-      });
-    });
-    builder.addCase(AsyncSignin.pending, (state, payload) => {
+    builder.addCase(AsyncSignup.fulfilled, (state, action) => {});
+    builder.addCase(AsyncSignin.fulfilled, (state, action) => {
       state.status = 'fullfilled';
+      state.value = action.payload[0];
     });
-    builder.addCase(AsyncSignout.rejected, (state, payload) => {});
+    builder.addCase(AsyncSignin.pending, (state, action) => {
+      state.status = 'pending';
+    });
+    builder.addCase(AsyncSignout.rejected, (state, action) => {});
   },
 });
 
-export {AsyncSignup};
+export {AsyncSignup, AsyncSignin};
 
 export default authSlice;

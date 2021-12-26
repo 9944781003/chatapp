@@ -3,6 +3,7 @@ import React from 'react';
 import AppStackNavigator from './AppStackNavigator';
 import AuthStackNavigator from './AuthStackNavigator';
 export type RootStackParamList = {
+  resolver: undefined;
   auth: undefined;
   app: undefined;
 };

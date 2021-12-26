@@ -6,6 +6,7 @@ var UserRouter = express.Router();
 UserRouter.get('/', async (req, response, next) => {
   try {
     let users = await User.find(req.query);
+    console.log(users);
     response.send(users);
   } catch (error) {
     console.log(error);

@@ -30,19 +30,19 @@ type StateProps = {
 type Props = NativeStackScreenProps<AuthStackParamList, 'SignupScreen'>;
 export default function SignupSceen(props: Props) {
   const [state, setState] = React.useState<StateProps>({
-    firstname: 'arulmurugan',
-    lastname: 'angappan',
-    username: 'arul123',
-    password: 'arul123',
-    email: 'arul@gmail.com',
-    phone: '9999999999',
+    firstname: '',
+    lastname: '',
+    username: '',
+    password: '',
+    email: '',
+    phone: '',
   });
   const dispatch = useDispatch();
   const auth = useSelector((state: RootState) => state.auth);
   React.useEffect(() => {
     console.log(auth.status);
     if (auth.status === 'fullfilled') {
-      navigationRef.navigate('app');
+      navigationRef.goBack();
     }
   }, [auth]);
 
@@ -75,14 +75,6 @@ export default function SignupSceen(props: Props) {
       state.password.length > 4
     ) {
       dispatch(AsyncSignup(state));
-      // setState({
-      //   firstname: '',
-      //   lastname: '',
-      //   username: '',
-      //   password: '',
-      //   email: '',
-      //   phone: '',
-      // });
     } else {
       console.log('form invalid', state);
       ToastAndroid.show(
@@ -140,7 +132,7 @@ export default function SignupSceen(props: Props) {
         />
         <TouchableHighlight
           onPress={HandleSubmitPress}
-          style={styles.loginBtn}
+          style={styles.signupBtn}
           children={
             <Text style={{textTransform: 'uppercase'}}>{'signup'}</Text>
           }
@@ -177,7 +169,7 @@ const styles = StyleSheet.create({
     marginRight: 12,
     fontSize: 14,
   },
-  loginBtn: {
+  signupBtn: {
     height: 40,
     borderWidth: 1,
     borderRadius: 4,

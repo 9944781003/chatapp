@@ -1,8 +1,8 @@
+import AsyncStorageLib from '@react-native-async-storage/async-storage';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React from 'react';
 import {
   Dimensions,
-  Pressable,
   StyleSheet,
   Text,
   TextInput,
@@ -11,9 +11,12 @@ import {
   View,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {AuthStackParamList} from '../navigators/AuthStackNavigator';
+import {RootState} from '../store';
+import {AsyncSignin} from '../store/slices/AuthSlice';
+import {User} from '../store/slices/UserSlice';
+import {navigationRef} from '../utils/navigationRef';
 
 type StateProps = {
   username: string;
@@ -25,9 +28,10 @@ export default function SigninSceen(props: Props) {
     username: '',
     password: '',
   });
+  const auth = useSelector((state: RootState) => state.auth);
+  const dispatch = useDispatch();
   const [passEye, togglePassEye] = React.useState<Boolean>(false);
 
-  const dispatch = useDispatch();
   const HandleUsernameChange = (username: string) => {
     setState({...state, username});
   };
@@ -37,7 +41,7 @@ export default function SigninSceen(props: Props) {
 
   const HandleSigninBtnPress = () => {
     if (state.username.length && state.password.length) {
-      // dispatch(asyncSignin(state));
+      dispatch(AsyncSignin(state));
     } else {
       ToastAndroid.show('Input required', ToastAndroid.SHORT);
     }
@@ -47,6 +51,16 @@ export default function SigninSceen(props: Props) {
   const HandleForgetPasswordPress = () =>
     props.navigation.navigate('ResetPassword');
 
+  React.useEffect(() => {
+    if (auth.status === 'fullfilled') {
+      let auth_user = {...auth.value};
+      AsyncStorageLib.setItem('auth_user', JSON.stringify(auth.value)).then(
+        () => {
+          navigationRef.navigate('app');
+        },
+      );
+    }
+  }, [auth]);
   return (
     <SafeAreaView style={styles.wrapper}>
       <View>
@@ -70,14 +84,14 @@ export default function SigninSceen(props: Props) {
         <View style={styles.btnGroup}>
           <TouchableHighlight
             onPress={HandleSigninBtnPress}
-            style={styles.loginBtn}
+            style={styles.signinBtn}
             children={
               <Text style={{textTransform: 'uppercase'}}>{'signin'}</Text>
             }
           />
           <TouchableHighlight
             onPress={HandleSignupBtnPress}
-            style={{...styles.loginBtn, backgroundColor: '#FFA500'}}
+            style={{...styles.signinBtn, backgroundColor: '#FFA500'}}
             children={
               <Text style={{textTransform: 'uppercase', color: '#FFFF'}}>
                 {'signup'}
@@ -116,7 +130,7 @@ const styles = StyleSheet.create({
     marginRight: 12,
     fontSize: 14,
   },
-  loginBtn: {
+  signinBtn: {
     height: 40,
     width: 140,
     borderWidth: 1,
