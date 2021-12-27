@@ -19,8 +19,9 @@ const AsyncSignup = createAsyncThunk(
 );
 const AsyncSignin = createAsyncThunk(
   'auth/signin',
-  async (prop: Pick<User, 'lastname' | 'password'>) => {
+  async (prop: Pick<User, 'username' | 'password'>) => {
     const response = await userApi.get('/', {params: prop});
+    console.log(response.data);
     return response.data;
   },
 );

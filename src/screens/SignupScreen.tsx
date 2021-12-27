@@ -62,13 +62,14 @@ export default function SignupSceen(props: Props) {
     if (
       state.firstname.length > 3 &&
       state.lastname.length &&
-      state?.username.length > 4 &&
+      state?.username.length > 3 &&
       emailPattern.test(state.email) &&
       state.phone.length > 9 &&
       state.password.length > 4
     ) {
       dispatch(AsyncSignup(state));
       setState({} as User);
+      props.navigation.goBack();
     } else {
       console.log('form invalid', state);
       ToastAndroid.show(

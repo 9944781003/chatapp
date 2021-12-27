@@ -21,6 +21,7 @@ const User = mongoose.model(
     email: {
       type: String,
       required: true,
+      unique: true,
       minlength: 4,
       maxlength: 50,
       validate: () => {
@@ -29,6 +30,7 @@ const User = mongoose.model(
     },
     phone: {
       type: String,
+      unique: true,
       validate: () => {
         return true;
       },
@@ -39,6 +41,7 @@ const User = mongoose.model(
       required: true,
       minlength: 4,
       maxlength: 50,
+      unique: true,
     },
     password: {
       type: String,

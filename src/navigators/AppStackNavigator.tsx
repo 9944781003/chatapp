@@ -15,7 +15,14 @@ const AppStack = createNativeStackNavigator<AppStackParamList>();
 export default () => {
   return (
     <AppStack.Navigator initialRouteName="UserListScreen">
-      <AppStack.Screen name="UserListScreen" component={UserListScreen} />
+      <AppStack.Screen
+        options={({route}) => ({
+          headerBackVisible: false,
+          title: 'Chat',
+        })}
+        name="UserListScreen"
+        component={UserListScreen}
+      />
       <AppStack.Screen
         name="ChatScreen"
         options={({route}) => ({
